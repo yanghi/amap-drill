@@ -20,10 +20,10 @@ const _getAMap = (key, plugins) => {
 }
 
 export const getAMap = (reload) => {
-  if (!reload && _AMap) {
-    return _AMap
+  if (reload) {
+    return _getAMap(KEY, PLUGINS)
   }
-  return _getAMap(KEY, PLUGINS)
+  return _AMap || (_AMap = window.AMap) || _getAMap(KEY, PLUGINS)
 }
 export const setAMapUrlOption = ({ key, plugins, version }) => {
   key && (KEY = key)
