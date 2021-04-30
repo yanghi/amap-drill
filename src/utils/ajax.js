@@ -1,3 +1,5 @@
+import { objectToQuery } from './util'
+
 const defaultError = 'Server Error 500'
 const defaultTimeout = 'Request Timeout'
 const xhr = (method, url, data = null, cb) => {
@@ -33,8 +35,8 @@ const xhr = (method, url, data = null, cb) => {
   })
 }
 
-export const get = (url) => {
-  return xhr('GET', url)
+export const get = (url, params) => {
+  return xhr('GET', url + objectToQuery(params))
 }
 export const post = (url, data, cb) => {
   return xhr('POST', url, data, cb)
