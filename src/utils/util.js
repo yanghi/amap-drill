@@ -20,6 +20,6 @@ export function objectToQuery(data, prefix = '?') {
     if (isNil(value)) continue
     res.push(key + '=' + value)
   }
-  if (!res.data.length) return ''
+  if (!res.length) return ''
   return (prefix || '') + res.join('&')
 }
