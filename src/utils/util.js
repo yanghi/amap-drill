@@ -23,3 +23,19 @@ export function objectToQuery(data, prefix = '?') {
   if (!res.length) return ''
   return (prefix || '') + res.join('&')
 }
+export const hasOwnProp = (obj, prop) => {
+  return Object.prototype.hasOwnProperty.call(obj, prop)
+}
+
+export const applyOption = (target, options) => {
+  for (let k in options) {
+    let prop = options[k]
+
+    if (hasOwnProp(target, k) && typeof prop == 'object' && prop) {
+      applyOptions(target[k], options[k])
+    } else {
+      target[k] = options[k]
+    }
+  }
+  return target
+}
