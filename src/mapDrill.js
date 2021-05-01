@@ -33,9 +33,19 @@ class MapDrill {
     this._map = map
     // 仅浅层设置options,
     opts = this.options = { ...MapDrill.defaultDrillOptions, ...opts }
+    const AMap = getAMap()
     if (opts.init) {
-      this._DL = opts.init.layer || createDistrictLayer('country')
-      const AMap = getAMap()
+      let dl = opts.init.layer
+      if (!dl) {
+        dl = map
+          .getLayers()
+          .find((l) => l instanceof AMap.DistrictLayer.Country || l instanceof AMap.DistrictLayer.Province)
+      }
+      if (!dl) {
+        dl = createDistrictLayer('country')
+        map.add(dl)
+      }
+      this._DL = dl
       let initDisDt = opts.init.data
       if (this._DL instanceof AMap.DistrictLayer.Country) {
         initDisDt = {
