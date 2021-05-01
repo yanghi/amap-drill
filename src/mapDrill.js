@@ -1,6 +1,7 @@
 import { createDistrictLayer } from './district'
 import { getDepthByAdcode } from './adcode'
 import { extend } from './utils'
+import { getAMap } from './getAMap'
 class MapDrill {
   static defaultDrillOptions = {
     clickOutsideToUp: true,
@@ -34,7 +35,19 @@ class MapDrill {
     opts = this.options = { ...MapDrill.defaultDrillOptions, ...opts }
     if (opts.init) {
       this._DL = opts.init.layer || createDistrictLayer('country')
-      opts.init.data && this._disStack.push((this._disData = opts.init.data))
+      const AMap = getAMap()
+      let initDisDt = opts.init.data
+      if (this._DL instanceof AMap.DistrictLayer.Country) {
+        initDisDt = {
+          x: 120,
+          y: 30,
+          adcode: 100000,
+          level: 'country',
+          SOC: 'CHN',
+          NAME_CHN: '中华人民共和国'
+        }
+      }
+      initDisDt && this._disStack.push((this._disData = initDisDt))
     }
     if (!this._DL) {
       this._DL = createDistrictLayer('country')
@@ -106,7 +119,6 @@ class MapDrill {
 
     let disOpt = this._getDisDrillOpts(level)
     map.add(newDisLay)
-
     map.setZoom(disOpt.zoom)
     map.setCenter([districtData.x, districtData.y])
     map.emit('districtChange', {
