@@ -16,6 +16,12 @@ const xhr = (method, url, data = null, cb) => {
       if (xhr.readyState === 4) {
         if ((xhr.status >= 200 && xhr.status < 300) || xhr.status === 304) {
           let response = xhr.response
+          let contentType = xhr.getResponseHeader('Content-Type')
+          if ((contentType || '').indexOf('application/json') > -1) {
+            try {
+              response = JSON.parse(response)
+            } catch (e) {}
+          }
           resolve(response)
         } else {
           doReject(xhr)
