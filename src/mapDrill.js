@@ -34,34 +34,30 @@ class MapDrill {
     // 仅浅层设置options,
     opts = this.options = { ...MapDrill.defaultDrillOptions, ...opts }
     const AMap = getAMap()
-    if (opts.init) {
-      let dl = opts.init.layer
-      if (!dl) {
-        dl = map
-          .getLayers()
-          .find((l) => l instanceof AMap.DistrictLayer.Country || l instanceof AMap.DistrictLayer.Province)
-      }
-      if (!dl) {
-        dl = createDistrictLayer('country')
-        map.add(dl)
-      }
-      this._DL = dl
-      let initDisDt = opts.init.data
-      if (this._DL instanceof AMap.DistrictLayer.Country) {
-        initDisDt = {
-          x: 120,
-          y: 30,
-          adcode: 100000,
-          level: 'country',
-          SOC: 'CHN',
-          NAME_CHN: '中华人民共和国'
-        }
-      }
-      initDisDt && this._disStack.push((this._disData = initDisDt))
+    if (!opts.init) opts.init = {}
+    let dl = opts.init.layer
+    if (!dl) {
+      dl = map
+        .getLayers()
+        .find((l) => l instanceof AMap.DistrictLayer.Country || l instanceof AMap.DistrictLayer.Province)
     }
-    if (!this._DL) {
-      this._DL = createDistrictLayer('country')
+    if (!dl) {
+      dl = createDistrictLayer('country')
+      map.add(dl)
     }
+    this._DL = dl
+    let initDisDt = opts.init.data
+    if (this._DL instanceof AMap.DistrictLayer.Country) {
+      initDisDt = {
+        x: 120,
+        y: 30,
+        adcode: 100000,
+        level: 'country',
+        SOC: 'CHN',
+        NAME_CHN: '中华人民共和国'
+      }
+    }
+    initDisDt && this._disStack.push((this._disData = initDisDt))
     map.on('click', async (ev) => {
       var data = this._DL.getDistrictByContainerPos(ev.pixel)
       if (data) {
