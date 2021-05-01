@@ -32,7 +32,7 @@ export const applyOption = (target, options) => {
     let prop = options[k]
 
     if (hasOwnProp(target, k) && typeof prop == 'object' && prop) {
-      applyOptions(target[k], options[k])
+      applyOption(target[k], options[k])
     } else {
       target[k] = options[k]
     }
