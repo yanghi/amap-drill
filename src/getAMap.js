@@ -19,8 +19,13 @@ const _getAMap = (key, plugins) => {
   })
 }
 
-export const getAMap = (reload) => {
-  if (reload) {
+export const getAMap = (options) => {
+  if (options) {
+    setAMapUrlOption(options)
+  } else {
+    options = {}
+  }
+  if (options.reload) {
     return _getAMap(KEY, PLUGINS)
   }
   return _AMap || (_AMap = window.AMap) || _getAMap(KEY, PLUGINS)
