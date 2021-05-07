@@ -1,5 +1,5 @@
-import { createDistrictLayer } from './district'
-import { getDepthByAdcode } from './adcode'
+import { createDistrictLayer, getDistictData } from './district'
+import { getDepthByAdcode, getUpDisticts } from './adcode'
 import { extend } from './utils'
 import { getAMap } from './getAMap'
 class MapDrill {
@@ -97,7 +97,83 @@ class MapDrill {
     if (idx) {
       let up = this._disStack[idx - 1]
       this.drill(up)
+    } else if (this._isPreGetDis) {
+      this._map.once('districtDataSetuped', (e) => {
+        if (e.adcode == this._disData.adcode) {
+          this.updrill()
+        }
+      })
     }
+  }
+  async drillTo(keywords) {
+    const disDt = await this._getDisData(keywords)
+    if (!disDt) return
+    this.drill(disDt)
+    let adcode = disDt.adcode
+    this._preGetDisData(adcode)
+  }
+  async _getDisData(keywords) {
+    if (keywords == '100000') {
+      return {
+        SOC: 'CHN',
+        x: 120,
+        y: 30,
+        level: 'country',
+        adcode: '100000',
+        NAME_CHN: '中国人民共和国'
+      }
+    }
+    const data = await getDistictData({
+      keywords
+    })
+    if (!data.districts) return
+    let curDis = data.districts[0]
+    if (!curDis) return
+    let pos = curDis.center.split(',')
+
+    const disDt = {
+      SOC: 'CHN',
+      x: parseInt(pos[0]),
+      y: parseInt(pos[1]),
+      level: curDis.level,
+      adcode: curDis.adcode,
+      NAME_CHN: curDis.name
+    }
+    return disDt
+  }
+  _preGetDisData(adcode) {
+    let upDis = getUpDisticts(adcode)
+    if (!upDis.length) {
+      upDis.unshift(100000)
+    }
+    console.log('up', upDis)
+
+    this._isPreGetDis = true
+    let disDtFn = upDis.map((c) => {
+      return new Promise((resolve, reject) => {
+        this._getDisData(c).then(resolve, reject)
+      })
+    })
+
+    Promise.all(disDtFn).then((res) => {
+      res = res.filter((i) => !!i)
+      if (!res.length) return
+      const topest = res[0]
+      let tIdx = this._disStack.findIndex((i) => i.adcode == topest.adcode)
+
+      if (~tIdx) {
+        this._disStack.splice(0, tIdx + 1)
+      }
+      let idx = this._disStack.findIndex((i) => i.adcode == adcode)
+
+      if (idx > -1) {
+        this._disStack.splice(idx, 0, ...res)
+      }
+      this._isPreGetDis = false
+      this._map.emit('districtDataSetuped', {
+        adcode
+      })
+    })
   }
   /**
    * 钻取行政区,
