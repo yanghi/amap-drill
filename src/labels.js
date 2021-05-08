@@ -18,7 +18,7 @@ export class DisrtictLabel {
   constructor(md, opts) {
     this._md = md
     let _opts = applyOption(this.options, opts)
-    setAMapWebApiKey(_opts.key)
+    setAMapWebApiKey(_opts.webApiKey)
     this._labelsLay = new AMap.LabelsLayer(_opts.lablesLayerOption)
     let disDt = md.getCurrentDisData()
     if (disDt) {

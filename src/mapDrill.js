@@ -1,7 +1,7 @@
-import { createDistrictLayer, getDistictData } from './district'
+import { createDistrictLayer, getDistictData, setAMapWebApiKey } from './district'
 import { getDepthByAdcode, getUpDisticts } from './adcode'
 import { extend } from './utils'
-import { getAMap } from './getAMap'
+import { getAMap, setAMapUrlOption } from './getAMap'
 class MapDrill {
   static defaultDrillOptions = {
     clickOutsideToUp: true,
@@ -33,6 +33,15 @@ class MapDrill {
     this._map = map
     // 仅浅层设置options,
     opts = this.options = { ...MapDrill.defaultDrillOptions, ...opts }
+    if (opts.webApiKey) {
+      setAMapWebApiKey(opts.webApiKey)
+    }
+    if (opts.mapKey) {
+      setAMapUrlOption({
+        key: opts.mapKey,
+        plugins: opts.mapPlugins
+      })
+    }
     const AMap = getAMap()
     if (!opts.init) opts.init = {}
     let dl = opts.init.layer
