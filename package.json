@@ -5,10 +5,8 @@
   "files": [
     "dist"
   ],
-  "author": {
-    "email": "yanghi-x@outlook.com",
-    "name": "yanghi"
-  },
+  "author": "yanghi <yanghi-x@outlook.com>",
+  "repository": "https://github.com/yanghi/amap-drill.git",
   "keywords": [
     "amap",
     "drill",
