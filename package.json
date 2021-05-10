@@ -1,6 +1,10 @@
 {
   "name": "amap-drill",
   "version": "0.0.1",
+  "main": "dist/amap-drill.js",
+  "files": [
+    "dist"
+  ],
   "author": {
     "email": "yanghi-x@outlook.com",
     "name": "yanghi"
@@ -11,7 +15,7 @@
     "amap plugin"
   ],
   "scripts": {
-    "dev": "webpack --mode development --config ./webpack.config.js",
+    "dev": "webpack --mode development --watch --config ./webpack.config.js",
     "build": "webpack --mode production --config ./webpack.config.js"
   },
   "gitHooks": {
