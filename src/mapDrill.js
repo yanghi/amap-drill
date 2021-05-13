@@ -2,6 +2,14 @@ import { createDistrictLayer, getDistictData, setAMapWebApiKey } from './distric
 import { getDepthByAdcode, getUpDisticts } from './adcode'
 import { extend } from './utils'
 import { getAMap, setAMapUrlOption } from './getAMap'
+const CN_DIST_DATA = {
+  SOC: 'CHN',
+  x: 120,
+  y: 30,
+  level: 'country',
+  adcode: '100000',
+  NAME_CHN: '中华人民共和国'
+}
 class MapDrill {
   static defaultDrillOptions = {
     clickOutsideToUp: true,
@@ -57,14 +65,7 @@ class MapDrill {
     this._DL = dl
     let initDisDt = opts.init.data
     if (this._DL instanceof AMap.DistrictLayer.Country) {
-      initDisDt = {
-        x: 120,
-        y: 30,
-        adcode: 100000,
-        level: 'country',
-        SOC: 'CHN',
-        NAME_CHN: '中华人民共和国'
-      }
+      initDisDt = CN_DIST_DATA
     }
     initDisDt && this._disStack.push((this._disData = initDisDt))
     map.on('click', async (ev) => {
@@ -123,14 +124,7 @@ class MapDrill {
   }
   async _getDisData(keywords) {
     if (keywords == '100000') {
-      return {
-        SOC: 'CHN',
-        x: 120,
-        y: 30,
-        level: 'country',
-        adcode: '100000',
-        NAME_CHN: '中国人民共和国'
-      }
+      return CN_DIST_DATA
     }
     const data = await getDistictData({
       keywords
@@ -155,7 +149,6 @@ class MapDrill {
     if (!upDis.length) {
       upDis.unshift(100000)
     }
-    console.log('up', upDis)
 
     this._isPreGetDis = true
     let disDtFn = upDis.map((c) => {
