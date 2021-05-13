@@ -1,6 +1,6 @@
 import { createDistrictLayer, getDistictData, setAMapWebApiKey } from './district'
 import { getDepthByAdcode, getUpDisticts } from './adcode'
-import { extend } from './utils'
+import { applyOption, deepCopy, extend } from './utils'
 import { getAMap, setAMapUrlOption } from './getAMap'
 const CN_DIST_DATA = {
   SOC: 'CHN',
@@ -40,7 +40,8 @@ class MapDrill {
   constructor(map, opts) {
     this._map = map
     // 仅浅层设置options,
-    opts = this.options = { ...MapDrill.defaultDrillOptions, ...opts }
+    opts = this.options = applyOption(deepCopy(MapDrill.defaultDrillOptions), opts)
+
     if (opts.webApiKey) {
       setAMapWebApiKey(opts.webApiKey)
     }
