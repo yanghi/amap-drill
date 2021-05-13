@@ -27,16 +27,18 @@ export const hasOwnProp = (obj, prop) => {
   return Object.prototype.hasOwnProperty.call(obj, prop)
 }
 
-export const applyOption = (target, options) => {
-  for (let k in options) {
-    let prop = options[k]
+export const applyOption = (target, ...optionsArgs) => {
+  optionsArgs.forEach((options) => {
+    for (let k in options) {
+      let prop = options[k]
 
-    if (hasOwnProp(target, k) && typeof prop == 'object' && prop) {
-      applyOption(target[k], options[k])
-    } else {
-      target[k] = options[k]
+      if (hasOwnProp(target, k) && typeof prop == 'object' && prop) {
+        applyOption(target[k], options[k])
+      } else {
+        target[k] = options[k]
+      }
     }
-  }
+  })
   return target
 }
 function typeOf(obj) {
