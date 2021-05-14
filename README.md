@@ -25,6 +25,10 @@ async function init() {
 }
 ```
 
+**注意**
+
+> 不支持 amap2.0
+
 ```js
 import { MapDrill, DisrtictLabel } from 'amap-drill'
 const initDistrictLayer = new AMap.DistrictLayer.Country({
@@ -70,10 +74,12 @@ new MapDrill(map, dirllOptions)
 - `map`: Map 实例
 - `dirllOptions`: mapDirll 配置
 
-默认配置
+配置
 
 ```js
 {
+  webApiKey: 'your_amap_web_api_key',
+  // 点击行政区外部返回上一层行政区
   clickOutsideToUp: true,
   drill: {
     province: {
