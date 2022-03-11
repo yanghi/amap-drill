@@ -16,5 +16,16 @@ module.exports = {
     alias: {
       '@': path.resolve(__dirname, 'src')
     }
+  },
+  module: {
+    rules: [
+      {
+        test: /\.js$/,
+        use: {
+          loader: 'babel-loader'
+        },
+        exclude: '/node_modules/'
+      }
+    ]
   }
 }
